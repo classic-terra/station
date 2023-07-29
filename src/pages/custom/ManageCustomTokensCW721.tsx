@@ -1,4 +1,4 @@
-import { AccAddress } from "@terra-rebels/feather.js"
+import { AccAddress } from "@terraclassic-community/feather.js"
 import { useCustomTokensCW721 } from "data/settings/CustomTokens"
 import { useCW721Whitelist } from "data/Terra/TerraAssets"
 import { useInitMsg } from "data/queries/wasm"

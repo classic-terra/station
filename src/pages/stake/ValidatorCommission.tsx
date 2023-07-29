@@ -3,7 +3,7 @@ import { readPercent } from "@terra-money/terra-utils"
 import { Card } from "components/layout"
 import { DateTimeRenderer } from "components/display"
 import ValidatorNumbers from "./components/ValidatorNumbers"
-import { Validator } from "@terra-rebels/feather.js"
+import { Validator } from "@terraclassic-community/feather.js"
 
 const ValidatorCommission = ({ validator }: { validator: Validator }) => {
   const { t } = useTranslation()

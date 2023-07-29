@@ -1,6 +1,6 @@
 import { useQueries, useQuery } from "react-query"
 import axios from "axios"
-import { AccAddress } from "@terra-rebels/feather.js"
+import { AccAddress } from "@terraclassic-community/feather.js"
 import { queryKey, RefetchOptions } from "../query"
 import { useNetwork } from "../wallet"
 import { useInterchainLCDClient } from "./lcdClient"

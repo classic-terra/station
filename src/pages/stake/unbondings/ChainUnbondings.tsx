@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
-import { UnbondingDelegation } from "@terra-rebels/feather.js"
-import { AccAddress, Dec } from "@terra-rebels/feather.js"
+import { UnbondingDelegation } from "@terraclassic-community/feather.js"
+import { AccAddress, Dec } from "@terraclassic-community/feather.js"
 import { useNetwork } from "data/wallet"
 import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"

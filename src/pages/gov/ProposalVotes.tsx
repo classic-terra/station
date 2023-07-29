@@ -1,7 +1,12 @@
 import { useTranslation } from "react-i18next"
 import classNames from "classnames/bind"
 import BigNumber from "bignumber.js"
-import { StakingPool, Tally, TallyParams, Vote } from "@terra-rebels/feather.js"
+import {
+  StakingPool,
+  Tally,
+  TallyParams,
+  Vote,
+} from "@terraclassic-community/feather.js"
 import { readAmount, readPercent } from "@terra-money/terra-utils"
 import { has } from "utils/num"
 import { combineState } from "data/query"

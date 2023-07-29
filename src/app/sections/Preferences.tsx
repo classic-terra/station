@@ -8,7 +8,10 @@ import NetworkSetting from "./NetworkSetting"
 import DisplayChainsSetting from "./DisplayChainsSetting"
 import LanguageSetting from "./LanguageSetting"
 import CurrencySetting from "./CurrencySetting"
-import { useWallet, WalletStatus } from "@terra-rebels/wallet-provider"
+import {
+  useWallet,
+  WalletStatus,
+} from "@terraclassic-community/wallet-provider"
 import { ModalButton } from "components/feedback"
 import SettingsButton from "components/layout/SettingsButton"
 import { useNetwork, useNetworkName } from "data/wallet"

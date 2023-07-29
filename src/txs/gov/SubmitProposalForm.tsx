@@ -3,13 +3,20 @@ import { useTranslation } from "react-i18next"
 import { useFieldArray, useForm } from "react-hook-form"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
-import { AccAddress, Coins, MsgSubmitProposal } from "@terra-rebels/feather.js"
+import {
+  AccAddress,
+  Coins,
+  MsgSubmitProposal,
+} from "@terraclassic-community/feather.js"
 import {
   TextProposal,
   CommunityPoolSpendProposal,
-} from "@terra-rebels/feather.js"
-import { ParameterChangeProposal, ParamChange } from "@terra-rebels/feather.js"
-import { ExecuteContractProposal } from "@terra-rebels/feather.js/dist/core/wasm/proposals"
+} from "@terraclassic-community/feather.js"
+import {
+  ParameterChangeProposal,
+  ParamChange,
+} from "@terraclassic-community/feather.js"
+import { ExecuteContractProposal } from "@terraclassic-community/feather.js/dist/core/wasm/proposals"
 import { isDenomTerraNative } from "@terra-money/terra-utils"
 import { readAmount, toAmount } from "@terra-money/terra-utils"
 import { SAMPLE_ADDRESS } from "config/constants"

@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { MnemonicKey } from "@terra-rebels/feather.js"
+import { MnemonicKey } from "@terraclassic-community/feather.js"
 import CreateWalletWizard from "./CreateWalletWizard"
 import Quiz from "./Quiz"
 

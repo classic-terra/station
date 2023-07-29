@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { MnemonicKey } from "@terra-rebels/feather.js"
+import { MnemonicKey } from "@terraclassic-community/feather.js"
 import createContext from "utils/createContext"
 import { addWallet } from "../../scripts/keystore"
 import CreateWalletForm from "./CreateWalletForm"

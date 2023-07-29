@@ -1,5 +1,9 @@
 import { useTranslation } from "react-i18next"
-import { AccAddress, Coin, Delegation } from "@terra-rebels/feather.js"
+import {
+  AccAddress,
+  Coin,
+  Delegation,
+} from "@terraclassic-community/feather.js"
 import { getMaxHeightStyle } from "utils/style"
 import { combineState } from "data/query"
 import { useExchangeRates } from "data/queries/coingecko"

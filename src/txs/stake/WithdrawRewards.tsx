@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { combineState } from "data/query"
 import { useInterchainDelegations } from "data/queries/staking"
 import { Page, ChainFilter } from "components/layout"
-import { Delegation } from "@terra-rebels/feather.js"
+import { Delegation } from "@terraclassic-community/feather.js"
 import DelegationsPromote from "app/containers/DelegationsPromote"
 import WithdrawRewardsTx from "./WithdrawRewardsTx"
 

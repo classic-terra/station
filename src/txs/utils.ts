@@ -1,5 +1,5 @@
 import { readAmount, toAmount } from "@terra-money/terra-utils"
-import { Coin, Coins } from "@terra-rebels/feather.js"
+import { Coin, Coins } from "@terraclassic-community/feather.js"
 import { getShouldTax } from "data/queries/treasury"
 import { FindDecimals } from "./IBCHelperContext"
 import { calcMinimumTaxAmount } from "./Tx"

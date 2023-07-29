@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { Coin } from "@terra-rebels/feather.js"
+import { Coin } from "@terraclassic-community/feather.js"
 import { readPercent, toAmount } from "@terra-money/terra-utils"
 import { getAmount } from "utils/coin"
 import { combineState, queryKey } from "data/query"

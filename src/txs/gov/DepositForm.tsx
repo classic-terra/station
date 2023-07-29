@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { MsgDeposit } from "@terra-rebels/feather.js"
+import { MsgDeposit } from "@terraclassic-community/feather.js"
 import { toAmount } from "@terra-money/terra-utils"
 import { queryKey } from "data/query"
 import { useBankBalance } from "data/queries/bank"

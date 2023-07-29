@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import UsbIcon from "@mui/icons-material/Usb"
 import BluetoothIcon from "@mui/icons-material/Bluetooth"
-import { LedgerKey } from "@terra-rebels/ledger-station-js"
+import { LedgerKey } from "@terraclassic-community/ledger-station-js"
 import {
   Form,
   FormError,

@@ -1,6 +1,6 @@
 import { always } from "ramda"
 import BigNumber from "bignumber.js"
-import { AccAddress } from "@terra-rebels/feather.js"
+import { AccAddress } from "@terraclassic-community/feather.js"
 import { validateMsg } from "utils/data"
 import wordlist from "bip39/src/wordlists/english.json"
 import { getChainIDFromAddress } from "utils/bech32"

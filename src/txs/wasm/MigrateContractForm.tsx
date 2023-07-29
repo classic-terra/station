@@ -1,7 +1,10 @@
 import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, MsgMigrateContract } from "@terra-rebels/feather.js"
+import {
+  AccAddress,
+  MsgMigrateContract,
+} from "@terraclassic-community/feather.js"
 import { parseJSON, validateMsg } from "utils/data"
 import { useAddress, useChainID } from "data/wallet"
 import { Form, FormItem } from "components/form"

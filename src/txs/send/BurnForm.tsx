@@ -5,7 +5,7 @@ import {
   AccAddress,
   MsgExecuteContract,
   MsgSend,
-} from "@terra-rebels/feather.js"
+} from "@terraclassic-community/feather.js"
 import { queryKey } from "data/query"
 import { useAddress, useNetwork } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"

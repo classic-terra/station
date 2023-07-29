@@ -1,10 +1,14 @@
 import { useCallback, useMemo } from "react"
 import { atom, useRecoilState } from "recoil"
 import { encode } from "js-base64"
-import { CreateTxOptions, Tx, isTxError } from "@terra-rebels/feather.js"
-import { AccAddress, SignDoc } from "@terra-rebels/feather.js"
-import { RawKey, SignatureV2 } from "@terra-rebels/feather.js"
-import { LedgerKey } from "@terra-rebels/ledger-station-js"
+import {
+  CreateTxOptions,
+  Tx,
+  isTxError,
+} from "@terraclassic-community/feather.js"
+import { AccAddress, SignDoc } from "@terraclassic-community/feather.js"
+import { RawKey, SignatureV2 } from "@terraclassic-community/feather.js"
+import { LedgerKey } from "@terraclassic-community/ledger-station-js"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import isWallet from "../scripts/isWallet"
 import { addWallet, PasswordError } from "../scripts/keystore"

@@ -1,4 +1,4 @@
-import { AccAddress, Coins } from "@terra-rebels/feather.js"
+import { AccAddress, Coins } from "@terraclassic-community/feather.js"
 import { isDenom, isDenomIBC } from "@terra-money/terra-utils"
 
 /* coin */

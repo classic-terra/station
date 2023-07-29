@@ -3,7 +3,11 @@ import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
 import { useDelegations } from "data/queries/staking"
-import { AccAddress, Coin, Delegation } from "@terra-rebels/feather.js"
+import {
+  AccAddress,
+  Coin,
+  Delegation,
+} from "@terraclassic-community/feather.js"
 import { ValidatorLink } from "components/general"
 import { ModalButton } from "components/feedback"
 import { Table } from "components/layout"

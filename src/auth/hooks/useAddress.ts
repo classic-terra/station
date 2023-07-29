@@ -1,4 +1,4 @@
-import { useConnectedWallet } from "@terra-rebels/use-wallet"
+import { useConnectedWallet } from "@terraclassic-community/use-wallet"
 import { useNetworks } from "app/InitNetworks"
 import { addressFromWords } from "utils/bech32"
 import useAuth from "./useAuth"

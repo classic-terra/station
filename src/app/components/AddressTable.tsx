@@ -1,4 +1,4 @@
-import { AccAddress } from "@terra-rebels/feather.js"
+import { AccAddress } from "@terraclassic-community/feather.js"
 import { getChainNamefromID } from "data/queries/chains"
 import { useNetwork, useAddress } from "data/wallet"
 import { TokenIcon } from "components/token"

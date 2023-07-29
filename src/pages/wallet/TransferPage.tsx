@@ -4,7 +4,7 @@ import {
   MsgExecuteContract,
   MsgSend,
   MsgTransfer,
-} from "@terra-rebels/feather.js"
+} from "@terraclassic-community/feather.js"
 import { isDenom, toAmount } from "@terra-money/terra-utils"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form, FormItem, Input, Select } from "components/form"

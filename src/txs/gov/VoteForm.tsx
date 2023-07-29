@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import classNames from "classnames/bind"
-import { MsgVote, Vote } from "@terra-rebels/feather.js"
+import { MsgVote, Vote } from "@terraclassic-community/feather.js"
 import { useGetVoteOptionItem } from "data/queries/gov"
 import { Form } from "components/form"
 import useProposalId from "pages/gov/useProposalId"

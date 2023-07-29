@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, SignatureV2 } from "@terra-rebels/feather.js"
+import { AccAddress, SignatureV2 } from "@terraclassic-community/feather.js"
 import { SAMPLE_ADDRESS } from "config/constants"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 import { Pre } from "components/general"

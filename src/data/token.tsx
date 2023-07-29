@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { isDenomIBC } from "@terra-money/terra-utils"
 import { readDenom, truncate } from "@terra-money/terra-utils"
-import { AccAddress } from "@terra-rebels/feather.js"
+import { AccAddress } from "@terraclassic-community/feather.js"
 import { ASSETS } from "config/constants"
 import { useTokenInfoCW20 } from "./queries/wasm"
 import { useCustomTokensCW20 } from "./settings/CustomTokens"

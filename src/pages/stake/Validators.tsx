@@ -1,6 +1,6 @@
 /* FIXME(terra.js): Import from terra.js */
 import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
-import { Delegation } from "@terra-rebels/feather.js"
+import { Delegation } from "@terraclassic-community/feather.js"
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking"
 import WithSearchInput from "pages/custom/WithSearchInput"
 import styles from "./Validators.module.scss"

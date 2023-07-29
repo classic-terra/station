@@ -1,7 +1,12 @@
 import { ReactNode, useMemo } from "react"
 import { capitalize } from "@mui/material"
 import { isDenom, truncate } from "@terra-money/terra-utils"
-import { AccAddress, Coin, Coins, ValAddress } from "@terra-rebels/feather.js"
+import {
+  AccAddress,
+  Coin,
+  Coins,
+  ValAddress,
+} from "@terraclassic-community/feather.js"
 import { useAddress, useNetwork } from "data/wallet"
 import { useValidators } from "data/queries/staking"
 import { WithTokenItem } from "data/token"

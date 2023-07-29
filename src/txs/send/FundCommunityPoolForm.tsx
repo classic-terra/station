@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
-import { AccAddress, MsgFundCommunityPool } from "@terra-rebels/feather.js"
+import {
+  AccAddress,
+  MsgFundCommunityPool,
+} from "@terraclassic-community/feather.js"
 import { queryKey } from "data/query"
 import { useAddress } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"

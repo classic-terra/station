@@ -1,5 +1,5 @@
 import qs from "qs"
-import { Tx as UnsignedTx } from "@terra-rebels/feather.js"
+import { Tx as UnsignedTx } from "@terraclassic-community/feather.js"
 import { useAddress } from "data/wallet"
 import { useInterchainLCDClient } from "data/queries/lcdClient"
 

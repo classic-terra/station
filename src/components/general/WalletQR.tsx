@@ -3,7 +3,7 @@ import { RenderButton } from "types/components"
 import { Grid } from "components/layout"
 import { ModalButton } from "components/feedback"
 import QRCodeGen from "auth/components/QRCode"
-import { AccAddress } from "@terra-rebels/feather.js"
+import { AccAddress } from "@terraclassic-community/feather.js"
 
 const WalletQR = ({
   renderButton,

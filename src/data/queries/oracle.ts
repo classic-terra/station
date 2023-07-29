@@ -4,7 +4,7 @@ import { compareIs, compareIsDenomIBC } from "utils/coin"
 import { toPrice } from "utils/num"
 import { queryKey, RefetchOptions } from "../query"
 import { useLCDClient } from "./lcdClient"
-import { Coins } from "@terra-rebels/terra.js"
+import { Coins } from "@terraclassic-community/terra.js"
 
 export const useExchangeRates = () => {
   const lcd = useLCDClient()
