@@ -1,0 +1,43 @@
+name: Sentry Release
+on:
+  workflow_run:
+    workflows:
+      - "Deploy Terra Classic Station"
+    types:
+      - completed
+    branches:
+      - main
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      CI: false
+      NODE_OPTIONS: "--max_old_space_size=4096"
+      REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Installing Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Installing dependencies
+        run: npm install
+      - name: Building project
+        run: npm run build
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          sourcemaps: ./build/static/js
+          ignore_missing: true
