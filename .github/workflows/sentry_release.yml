@@ -29,13 +29,27 @@ jobs:
         run: npm install
       - name: Building project
         run: npm run build
+#      - name: Install sentry-cli
+#        run: npm install -g @sentry/cli
+#      - name: Create Sentry release
+#        env:
+#          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+#          SENTRY_PROJECT: $${{ secrets.SENTRY_PROJECT }}
+#        shell: bash
+#        run: |
+#          sentry-cli --auth-token ${{ secrets.SENTRY_AUTH_TOKEN }} releases --org ${{ secrets.SENTRY_ORG }} --project ${{ secrets.SENTRY_PROJECT }} new ${{ github.sha }}
+#          sentry-cli --auth-token ${{ secrets.SENTRY_AUTH_TOKEN }} releases --org ${{ secrets.SENTRY_ORG }} set-commits --auto ${{ github.sha }}
+#          sentry-cli --auth-token ${{ secrets.SENTRY_AUTH_TOKEN }} releases --org ${{ secrets.SENTRY_ORG }} files "${{ github.sha }}" upload-sourcemaps ./build/static/js
+#          sentry-cli --auth-token ${{ secrets.SENTRY_AUTH_TOKEN }} releases --org ${{ secrets.SENTRY_ORG }} finalize ${{ github.sha }}
       - name: Create Sentry release
         uses: getsentry/action-release@v1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_PROJECT: $${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
           sourcemaps: ./build/static/js
           ignore_missing: true
+          ignore_empty: true
