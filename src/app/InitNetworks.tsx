@@ -38,7 +38,7 @@ const InitNetworks = ({ children }: PropsWithChildren<{}>) => {
     ? Object.values({
         ...networks.mainnet,
         ...networks.testnet,
-        ...networks.classic,
+        // ...networks.classic,
       }).map((chain) => {
         const lcd = customLCDs[chain.chainID] ?? chain.lcd
         return { ...chain, lcd }

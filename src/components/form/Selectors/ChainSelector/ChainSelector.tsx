@@ -23,7 +23,7 @@ const ChainSelector = ({
   const allNetworks = useMemo(
     () => ({
       ...networks.localterra,
-      ...networks.classic,
+      // ...networks.classic,
       ...networks.testnet,
       ...networks.mainnet,
     }),
