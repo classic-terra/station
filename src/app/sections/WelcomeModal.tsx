@@ -17,7 +17,7 @@ const accordions = [
         <span className={styles.highlighted}>New wallet</span>,
         ". You can find a guide ",
         <ExternalLink
-          href="https://docs.terrarebels.net/learn/station/wallet#create-a-wallet"
+          href="https://docs.terraclassic.community/learn/station/wallet#create-a-wallet"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -40,7 +40,7 @@ const accordions = [
       [
         " You can find a guide ",
         <ExternalLink
-          href="https://docs.terrarebels.net/learn/station/migration/"
+          href="https://docs.terraclassic.community/learn/station/migration/"
           target="_blank"
           rel="noopener noreferrer"
         >
