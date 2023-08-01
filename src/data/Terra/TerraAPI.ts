@@ -26,7 +26,7 @@ export enum AggregateWallets {
 }
 
 export const useTerraAPIURL = () => {
-  return "https://api.terrarebels.net"
+  return "https://api.terraclassic.community"
 }
 
 export const useIsTerraAPIAvailable = () => {

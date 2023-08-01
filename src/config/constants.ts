@@ -16,7 +16,7 @@ export const MINTSCAN = "https://www.mintscan.io"
 export const EXTENSION =
   "https://chrome.google.com/webstore/detail/akckefnapafjbpphkefbpkpcamkoaoai"
 export const DOCUMENTATION =
-  "https://docs.terrarebels.net/learn/station/download/station-desktop.html"
+  "https://docs.terraclassic.community/learn/station/download/station-desktop.html"
 export const FORUMS = "https://forums.hexxagon.io"
 export const SETUP = "https://setup-station.terraclassic.community/"
 export const MARS_TEST_EXPLORER = "https://testnet-explorer.marsprotocol.io"

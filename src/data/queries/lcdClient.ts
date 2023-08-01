@@ -19,7 +19,7 @@ export const useLCDClient = () => {
     () =>
       new LCDClient({
         ...network[chainID],
-        URL: "https://lcd.terrarebels.net",
+        URL: "https://lcd.terraclassic.community",
       }),
     [network, chainID]
   )

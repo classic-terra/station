@@ -2,8 +2,8 @@
   "name": "terra-classic-station",
   "description": "A web application to interact with Terra Core.",
   "hompage": "https://station.terraclassic.community",
-  "author": "Terra Rebels <support@terrarebels.net> (https://terrarebels.net)",
-  "repository": "github:terra-classic-community/station",
+  "author": "Terra Classic Community",
+  "repository": "github:classic-terra/station",
   "version": "1.0.4",
   "license": "MIT",
   "scripts": {
