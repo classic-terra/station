@@ -142,7 +142,10 @@ const BurnForm = ({ chainID }: { chainID: string }) => {
   )
 
   /* fee */
-  const coins = [{ input, denom: token, taxRequired: true }] as CoinInput[]
+  const taxRequired = chainID === "columbus-5"
+  const coins = [
+    { input, denom: token, taxRequired: taxRequired },
+  ] as CoinInput[]
   const estimationTxValues = useMemo(
     () => ({ address: connectedAddress, input: toInput(1, decimals) }),
     [connectedAddress, decimals]
