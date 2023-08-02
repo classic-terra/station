@@ -109,6 +109,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const { token, decimals, amount, balance, chain, baseDenom, hideLoader } =
     props
   const { estimationTxValues, createTx, gasAdjustment: txGasAdjustment } = props
+  const { taxRequired = false } = props
   const { children, onChangeMax } = props
   const { onPost, redirectAfterTx, queryKeys, onSuccess } = props
 
@@ -133,17 +134,18 @@ function Tx<TxValues>(props: Props<TxValues>) {
 
   /* taxes */
   const isClassic = networks[chain]?.isClassic
-  const shouldTax = isClassic && getShouldTax(token, isClassic)
+  const shouldTax = isClassic && taxRequired && getShouldTax(token, isClassic)
   const { data: taxRate = "0", ...taxRateState } = useTaxRate(!shouldTax)
   const { data: taxCap = "0", ...taxCapState } = useTaxCap(token)
   const taxState = combineState(taxRateState, taxCapState)
-  const taxes = isClassic
-    ? calcTaxes(
-        props.coins ?? ([{ input: 0, denom: token }] as CoinInput[]),
-        { taxRate, taxCap },
-        !!isClassic
-      )
-    : undefined
+  const taxes =
+    isClassic && taxRequired
+      ? calcTaxes(
+          props.coins ?? ([{ input: 0, denom: token }] as CoinInput[]),
+          { taxRate, taxCap },
+          !!isClassic
+        )
+      : undefined
 
   /* simulation: estimate gas */
   const simulationTx = estimationTxValues && createTx(estimationTxValues)
@@ -216,7 +218,7 @@ function Tx<TxValues>(props: Props<TxValues>) {
   const getNativeMax = () => {
     if (!balance) return
     const gasAmount = gasFee.denom === token ? gasFee.amount : "0"
-    return calcMax({ balance, taxRate, taxCap, gasAmount, shouldTax }).max
+    return calcMax({ balance, taxRate, taxCap, gasAmount, taxRequired }).max
   }
 
   const max = !gasFee.amount
@@ -573,7 +575,7 @@ interface Params {
   taxRate: string
   taxCap: Amount
   gasAmount: Amount
-  shouldTax?: boolean | false
+  taxRequired?: boolean
 }
 
 // Receive tax and gas information and return the maximum payment amount
@@ -582,7 +584,7 @@ export const calcMax = ({
   taxRate,
   taxCap,
   gasAmount,
-  shouldTax,
+  taxRequired,
 }: Params) => {
   const available = new BigNumber(balance).minus(gasAmount)
 
@@ -592,7 +594,7 @@ export const calcMax = ({
   })
 
   const max = BigNumber.max(
-    new BigNumber(available).minus(shouldTax ? tax : 0),
+    new BigNumber(available).minus(taxRequired ? tax : 0),
     0
   )
     .integerValue(BigNumber.ROUND_FLOOR)
