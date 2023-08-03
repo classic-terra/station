@@ -25,10 +25,10 @@ jobs:
     - name: Building project
       run: npm run build
     - name: Generate MD5 checksums
-      run: find build -type f -print0 | xargs -0 md5sum | sed "s/build/https:\/\/station.terraclassic.community/g" > checksum.txt
+      run: find build -type f -print0 | xargs -0 md5sum | sed "s/build/https:\/\/station.terraclassic.community/g" | sed "s/index.html//g" > checksum.txt
     - uses: actions/upload-artifact@v3
       with:
-        name: Upload Checksum File
+        name: MD5 Checksum File
         path: checksum.txt
     - name: Publish to Cloudflare Pages
       uses: cloudflare/pages-action@v1
