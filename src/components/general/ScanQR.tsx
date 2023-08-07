@@ -21,8 +21,8 @@ const ScanQR = ({
   const handleScan = (result: any) => {
     const schemeUrl = {
       connectWallet: /^.*(wallet_connect|walletconnect_connect).*payload/,
-      recoverWallet: /^.*(|\/\/)wallet_recover\/\?payload=/,
-      send: /^.*(|\/\/)send\/\?payload=/,
+      recoverWallet: /^terraclassicstation:(|\/\/)wallet_recover\/\?payload=/,
+      send: /^terraclassicstation:(|\/\/)send\/\?payload=/,
     }
 
     if (!!result) {

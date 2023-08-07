@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import {
@@ -6,42 +6,32 @@ import {
   MsgFundCommunityPool,
 } from "@terraclassic-community/feather.js"
 import { queryKey } from "data/query"
-import { useAddress } from "data/wallet"
+import { useAddress, useNetwork } from "data/wallet"
 import { useBankBalance } from "data/queries/bank"
 import { useTnsAddress } from "data/external/tns"
 import { Card, Grid } from "components/layout"
-import { Form, FormItem, FormWarning, Input } from "components/form"
+import { Form, FormItem, FormWarning, Input, Select } from "components/form"
 import Tx, { getInitialGasDenom } from "../Tx"
 import { toAmount } from "@terra-money/terra-utils"
 import { CoinInput, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import { useNativeDenoms } from "../../data/token"
 import { getAmount } from "../../utils/coin"
-import { useExchangeRates } from "../../data/queries/coingecko"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
   address?: AccAddress // hidden input
   input?: number
   memo?: string
-}
-
-interface AssetType {
-  denom: string
-  balance: string
-  icon: string
-  symbol: string
-  price: number
-  chains: string[]
+  denom?: CoinDenom
 }
 
 const FundCommunityPoolForm = ({ chainID }: { chainID: string }) => {
   const { t } = useTranslation()
   const connectedAddress = useAddress()
   const bankBalance = useBankBalance()
-  const balances = useBankBalance()
-  const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
+  const networks = useNetwork()
 
   /* tx context */
   const initialGasDenom = getInitialGasDenom(bankBalance)
@@ -54,40 +44,12 @@ const FundCommunityPoolForm = ({ chainID }: { chainID: string }) => {
   const { errors } = formState
   const { recipient, input } = watch()
 
-  const availableAssets = useMemo(
-    () =>
-      Object.values(
-        (balances ?? []).reduce((acc, { denom, amount, chain }) => {
-          const data = readNativeDenom(denom)
-          if (acc[data.token]) {
-            acc[data.token].balance = `${
-              parseInt(acc[data.token].balance) + parseInt(amount)
-            }`
-            acc[data.token].chains.push(chain)
-            return acc as Record<string, AssetType>
-          } else {
-            return {
-              ...acc,
-              [data.token]: {
-                denom: data.token,
-                balance: amount,
-                icon: data.icon,
-                symbol: data.symbol,
-                price: prices?.[data.token]?.price ?? 0,
-                chains: [chain],
-              },
-            } as Record<string, AssetType>
-          }
-        }, {} as Record<string, AssetType>)
-      ).sort(
-        (a, b) => b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
-      ),
-    [balances, readNativeDenom, prices]
-  )
-  const defaultAsset = availableAssets[0].denom
+  const availableAssets =
+    chainID === "columbus-5" ? ["uluna", "uusd"] : [networks[chainID].baseAsset]
+  const defaultAsset = availableAssets[0]
   const decimals = defaultAsset ? readNativeDenom(defaultAsset).decimals : 6
   const amount = toAmount(input, { decimals })
-  const token = readNativeDenom(defaultAsset).token
+  const [token, setToken] = useState(readNativeDenom(defaultAsset).token)
   const balance = getAmount(bankBalance, token)
 
   /* resolve recipient */
@@ -185,15 +147,23 @@ const FundCommunityPoolForm = ({ chainID }: { chainID: string }) => {
               <Input
                 {...register("input", {
                   valueAsNumber: true,
-                  validate: validate.input(
-                    toInput(max.amount, decimals),
-                    decimals
-                  ),
+                  validate: validate.input(toInput(max.amount)),
                 })}
-                token={token}
                 inputMode="decimal"
-                onFocus={max.reset}
                 placeholder={getPlaceholder(decimals)}
+                selectBefore={
+                  <Select
+                    {...register("denom")}
+                    onChange={(e) => setToken(e.target.value)}
+                    before
+                  >
+                    {availableAssets.map((denom) => (
+                      <option value={denom} key={denom}>
+                        {readNativeDenom(denom).symbol}
+                      </option>
+                    ))}
+                  </Select>
+                }
               />
             </FormItem>
 

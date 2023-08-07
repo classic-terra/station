@@ -56,7 +56,7 @@ const ExportWalletForm = () => {
   const render = {
     [Mode.QR]: () => (
       <QRCodeGen
-        value={`https://station.terraclassic.community/wallet_recover/?payload=${encoded}`}
+        value={`terraclassicstation://wallet_recover/?payload=${encoded}`}
       />
     ),
     [Mode.KEY]: () => (
