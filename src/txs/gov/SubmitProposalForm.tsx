@@ -88,7 +88,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
   const addresses = useInterchainAddresses()
   const networks = useNetwork()
-  const readNetiveDenom = useNativeDenoms()
+  const readNativeDenom = useNativeDenoms()
 
   const bankBalance = useBankBalance()
   const balance =
@@ -118,6 +118,8 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const amount = toAmount(input)
   const { fields, append, remove } = useFieldArray({ control, name: "changes" })
   const coinsFieldArray = useFieldArray({ control, name: "coins" })
+  const availableAssets =
+    chain === "columbus-5" ? ["uluna", "uusd"] : [networks[chain].baseAsset]
 
   /* update input */
   useEffect(() => {
@@ -249,9 +251,9 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
               placeholder={placeholder}
               selectBefore={
                 <Select {...register("spend.denom")} before>
-                  {[networks[chain].baseAsset].map((denom) => (
+                  {availableAssets.map((denom) => (
                     <option value={denom} key={denom}>
-                      {readNetiveDenom(denom).symbol}
+                      {readNativeDenom(denom).symbol}
                     </option>
                   ))}
                 </Select>
@@ -383,7 +385,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                         .filter(({ denom }) => isDenomTerraNative(denom))
                         .map(({ denom }) => (
                           <option value={denom} key={denom}>
-                            {readNetiveDenom(denom).symbol}
+                            {readNativeDenom(denom).symbol}
                           </option>
                         ))}
                     </Select>
@@ -451,7 +453,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 })}
                 placeholder={t(
                   `We're proposing to spend 100,000 ${
-                    readNetiveDenom(networks[chain].baseAsset).symbol
+                    readNativeDenom(networks[chain].baseAsset).symbol
                   } from the Community Pool to fund the creation of public goods for the ${
                     networks[chain].name
                   } ecosystem`
@@ -463,12 +465,12 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
               label={
                 <TooltipIcon
                   content={`To help push the proposal to the voting period, consider depositing more ${
-                    readNetiveDenom(networks[chain].baseAsset).symbol
+                    readNativeDenom(networks[chain].baseAsset).symbol
                   } to reach the minimum ${
                     Number(minDeposit) /
-                    10 ** readNetiveDenom(networks[chain].baseAsset).decimals
+                    10 ** readNativeDenom(networks[chain].baseAsset).decimals
                   } ${
-                    readNetiveDenom(networks[chain].baseAsset).symbol
+                    readNativeDenom(networks[chain].baseAsset).symbol
                   } (optional).`}
                 >
                   {t("Initial deposit")} ({t("optional")})
