@@ -3,13 +3,14 @@ import { ChainFilter, Page } from "components/layout"
 import FundCommunityPoolForm from "./FundCommunityPoolForm"
 import TxContext from "../TxContext"
 import { useChainID, useNetworkName } from "../../auth/hooks/useNetwork"
+import { isTerraChain } from "../../utils/chain"
 
 const FundCommunityPoolTx = () => {
   const { t } = useTranslation()
   const networkName = useNetworkName()
   const chainID = useChainID()
 
-  return networkName === "mainnet" && chainID === "columbus-5" ? (
+  return networkName === "mainnet" && isTerraChain(chainID) ? (
     <Page title={t("Fund Community Pool")}>
       <TxContext>
         <ChainFilter

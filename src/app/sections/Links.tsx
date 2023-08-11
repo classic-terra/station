@@ -15,8 +15,8 @@ const Links = () => {
   const community = {
     // discord: "https://discord.gg/K6Yd8xhYTF",
     // telegram: "https://t.me/OfficialTerraRebels",
-    twitter: "https://twitter.com/TerraRebels",
-    github: "https://github.com/terra-rebels",
+    twitter: "https://twitter.com/hexxagon_io",
+    github: "https://github.com/classic-terra",
   }
 
   return (
