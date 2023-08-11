@@ -7,10 +7,9 @@ import { isTerraChain } from "../../utils/chain"
 
 const BurnTx = () => {
   const { t } = useTranslation()
-  const networkName = useNetworkName()
   const chainID = useChainID()
 
-  return networkName === "mainnet" && isTerraChain(chainID) ? (
+  return isTerraChain(chainID) ? (
     <Page title={t("Burn Funds")}>
       <TxContext>
         <ChainFilter
