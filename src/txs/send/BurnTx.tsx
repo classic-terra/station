@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { ChainFilter, Page } from "components/layout"
 import TxContext from "../TxContext"
-import { useChainID, useNetworkName } from "../../auth/hooks/useNetwork"
+import { useChainID } from "../../auth/hooks/useNetwork"
 import BurnForm from "./BurnForm"
 import { isTerraChain } from "../../utils/chain"
 
