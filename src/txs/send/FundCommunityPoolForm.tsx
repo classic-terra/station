@@ -17,6 +17,7 @@ import { CoinInput, getPlaceholder, toInput } from "../utils"
 import validate from "../validate"
 import { useNativeDenoms } from "../../data/token"
 import { getAmount } from "../../utils/coin"
+import { isTerraChain } from "../../utils/chain"
 
 interface TxValues {
   recipient?: string // AccAddress | TNS
@@ -44,8 +45,9 @@ const FundCommunityPoolForm = ({ chainID }: { chainID: string }) => {
   const { errors } = formState
   const { recipient, input } = watch()
 
-  const availableAssets =
-    chainID === "columbus-5" ? ["uluna", "uusd"] : [networks[chainID].baseAsset]
+  const availableAssets = isTerraChain(chainID)
+    ? ["uluna", "uusd"]
+    : [networks[chainID].baseAsset]
   const defaultAsset = availableAssets[0]
   const decimals = defaultAsset ? readNativeDenom(defaultAsset).decimals : 6
   const amount = toAmount(input, { decimals })
@@ -90,7 +92,7 @@ const FundCommunityPoolForm = ({ chainID }: { chainID: string }) => {
   )
 
   /* fee */
-  const taxRequired = chainID === "columbus-5"
+  const taxRequired = isTerraChain(chainID)
   const coins = [
     { input, denom: token, taxRequired: taxRequired },
   ] as CoinInput[]

@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { ChainFilter, Page } from "components/layout"
 import FundCommunityPoolForm from "./FundCommunityPoolForm"
 import TxContext from "../TxContext"
-import { useChainID, useNetworkName } from "../../auth/hooks/useNetwork"
+import { useChainID } from "../../auth/hooks/useNetwork"
 import { isTerraChain } from "../../utils/chain"
 
 const FundCommunityPoolTx = () => {
