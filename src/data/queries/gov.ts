@@ -116,6 +116,8 @@ export interface ProposalResult46 {
 /* proposals */
 export const useProposals = (status: ProposalStatus) => {
   const networks = useNetwork()
+  let proposalResults: any[] = []
+  let key: string = ""
 
   return useQueries(
     Object.values(networks).map(({ lcd, version, chainID }) => {
@@ -160,16 +162,25 @@ export const useProposals = (status: ProposalStatus) => {
               })) as ProposalResult[]
             ).map((prop) => ({ prop, chain: chainID }))
           } else {
-            const {
-              data: { proposals },
-            } = await axios.get("/cosmos/gov/v1beta1/proposals", {
-              baseURL: lcd,
-              params: {
-                "pagination.limit": 999,
-                proposal_status: Proposal.Status[status],
-              },
-            })
-            return (proposals as ProposalResult[]).map((prop) => ({
+            while (key != null) {
+              let {
+                data: { proposals, pagination },
+              } = await axios.get("/cosmos/gov/v1beta1/proposals", {
+                baseURL: lcd,
+                params: {
+                  "pagination.limit": 999,
+                  "pagination.key": key,
+                  proposal_status: Proposal.Status[status],
+                },
+              })
+
+              proposalResults = [...proposals, ...proposalResults]
+              key = pagination.next_key
+
+              console.log("test")
+            }
+
+            return (proposalResults as ProposalResult[]).map((prop) => ({
               prop,
               chain: chainID,
             }))
