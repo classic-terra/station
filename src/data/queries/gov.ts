@@ -176,8 +176,6 @@ export const useProposals = (status: ProposalStatus) => {
 
               proposalResults = [...proposals, ...proposalResults]
               key = pagination.next_key
-
-              console.log("test")
             }
 
             return (proposalResults as ProposalResult[]).map((prop) => ({
