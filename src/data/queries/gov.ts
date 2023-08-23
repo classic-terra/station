@@ -116,11 +116,12 @@ export interface ProposalResult46 {
 /* proposals */
 export const useProposals = (status: ProposalStatus) => {
   const networks = useNetwork()
-  let proposalResults: any[] = []
-  let key: string = ""
 
   return useQueries(
     Object.values(networks).map(({ lcd, version, chainID }) => {
+      let proposalResults: any[] = []
+      let paginationKey: string = ""
+
       return {
         queryKey: [queryKey.gov.proposals, lcd, status],
         queryFn: async () => {
@@ -162,20 +163,20 @@ export const useProposals = (status: ProposalStatus) => {
               })) as ProposalResult[]
             ).map((prop) => ({ prop, chain: chainID }))
           } else {
-            while (key != null) {
+            while (paginationKey !== null) {
               let {
                 data: { proposals, pagination },
               } = await axios.get("/cosmos/gov/v1beta1/proposals", {
                 baseURL: lcd,
                 params: {
                   "pagination.limit": 999,
-                  "pagination.key": key,
+                  "pagination.key": paginationKey,
                   proposal_status: Proposal.Status[status],
                 },
               })
 
-              proposalResults = [...proposals, ...proposalResults]
-              key = pagination.next_key
+              proposalResults.push(...proposals)
+              paginationKey = pagination.next_key
             }
 
             return (proposalResults as ProposalResult[]).map((prop) => ({
