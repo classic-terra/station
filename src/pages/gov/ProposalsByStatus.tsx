@@ -29,8 +29,8 @@ const ProposalsByStatus = ({ status }: { status: ProposalStatus }) => {
 
     proposals.sort(
       (a, b) =>
-        new Date(b.prop.voting_start_time || b.prop.submit_time).getTime() -
-        new Date(a.prop.voting_start_time || a.prop.submit_time).getTime()
+        new Date(b.prop.submit_time || b.prop.voting_start_time).getTime() -
+        new Date(a.prop.submit_time || a.prop.voting_start_time).getTime()
     )
 
     return (
