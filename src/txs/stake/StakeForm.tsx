@@ -38,7 +38,6 @@ interface TxValues {
   source?: ValAddress
   input?: number
 }
-
 export enum StakeAction {
   DELEGATE = "Delegate",
   REDELEGATE = "Redelegate",
@@ -290,6 +289,7 @@ const StakeForm = (props: Props) => {
               })}
               token={denom}
               onFocus={max.reset}
+              type="number"
               inputMode="decimal"
               placeholder={getPlaceholder()}
               autoFocus

@@ -14,6 +14,7 @@ import { ASSETS } from "config/constants"
 import shuffle from "utils/shuffle"
 import { queryKey, RefetchOptions } from "../query"
 import { useNetworkName } from "../../auth/hooks/useNetwork"
+import { NetworkName } from "types/network"
 
 const config = { baseURL: ASSETS }
 

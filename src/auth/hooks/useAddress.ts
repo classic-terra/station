@@ -1,9 +1,9 @@
-import { useConnectedWallet } from "@terraclassic-community/use-wallet"
+import { useConnectedWallet } from "@terraclassic-community/wallet-kit"
 import { useNetworks } from "app/InitNetworks"
 import { addressFromWords } from "utils/bech32"
 import useAuth from "./useAuth"
-import { useChainID } from "./useNetwork"
-import { useNetwork } from "data/wallet"
+import { useChainID, useNetwork, useNetworkWithFeature } from "./useNetwork"
+import { ChainFeature } from "types/chains"
 
 /* auth | walle-provider */
 const useAddress = () => {
@@ -28,17 +28,17 @@ export const useAllInterchainAddresses = () => {
 export const useInterchainAddresses = () => {
   const connected = useConnectedWallet()
   const { filterEnabledNetworks } = useNetworks()
-  const { wallet } = useAuth()
   const networks = useNetwork()
+  const { wallet } = useAuth()
 
   if (connected?.addresses) {
     return filterEnabledNetworks(connected.addresses)
   }
 
   const words = wallet?.words
-  if (!words) return
+  if (!words) return {}
 
-  const addresses = Object.values(networks).reduce(
+  const addresses = Object.values(networks ?? {}).reduce(
     (acc, { prefix, coinType, chainID }) => {
       acc[chainID] = addressFromWords(words[coinType] as string, prefix)
       return acc
@@ -46,6 +46,14 @@ export const useInterchainAddresses = () => {
     {} as Record<string, string>
   )
   return addresses
+}
+
+export const useInterchainAddressesWithFeature = (feature?: ChainFeature) => {
+  const addresses = useInterchainAddresses()
+  const networks = useNetworkWithFeature(feature)
+  return Object.fromEntries(
+    Object.entries(addresses).filter(([key, _]) => networks[key])
+  )
 }
 
 export default useAddress

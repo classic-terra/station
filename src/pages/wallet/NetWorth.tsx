@@ -7,16 +7,18 @@ import { useCurrency } from "data/settings/Currency"
 import { useNativeDenoms } from "data/token"
 import { useTranslation } from "react-i18next"
 import styles from "./NetWorth.module.scss"
-import { Path, useWalletRoute } from "./Wallet"
+import { useWalletRoute, Path } from "./Wallet"
 import { capitalize } from "@mui/material"
 import NetWorthTooltip from "./NetWorthTooltip"
-import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
+import { ModalButton } from "components/feedback"
+import FiatRampModal from "./FiatRampModal"
+// import { Add as AddIcon, Send as SendIcon } from "@mui/icons-material"
 import classNames from "classnames"
 import { useInterchainAddresses } from "auth/hooks/useAddress"
-import { useChainID, useNetworkName } from "data/wallet"
-// import { ReactComponent as SendIcon } from "styles/images/icons/Send_v2.svg"
+import { useNetworkName } from "data/wallet"
+import { ReactComponent as SendIcon } from "styles/images/icons/Send_v2.svg"
 import { ReactComponent as ReceiveIcon } from "styles/images/icons/Receive_v2.svg"
-// import { ReactComponent as AddIcon } from "styles/images/icons/Buy_v2.svg"
+import { ReactComponent as AddIcon } from "styles/images/icons/Buy_v2.svg"
 
 const cx = classNames.bind(styles)
 
@@ -29,7 +31,14 @@ const NetWorth = () => {
   const { setRoute, route } = useWalletRoute()
   const addresses = useInterchainAddresses()
   const networkName = useNetworkName()
+  const isWalletEmpty = useIsWalletEmpty()
+
+  const networks = useNetwork()
   const chainID = useChainID()
+  const availableGasDenoms = useMemo(() => {
+    return Object.keys(networks[chainID]?.gasPrices)
+  }, [chainID, networks])
+  const sendButtonDisabled = isWalletEmpty && !!availableGasDenoms.length
 
   // TODO: show CW20 balances and staked tokens
   const coinsValue = coins?.reduce((acc, { amount, denom }) => {
@@ -63,6 +72,7 @@ const NetWorth = () => {
           <Button
             color="primary"
             className={styles.wallet_primary}
+            disabled={sendButtonDisabled}
             onClick={() =>
               setRoute({
                 path: Path.send,

@@ -64,7 +64,7 @@ const useSwapUtils = () => {
   const findPair = useCallback(
     (assets: SwapAssets, dex: Dex) => {
       const { offerAsset, askAsset } = assets
-      const pair = Object.entries(pairs).find(([, item]) =>
+      const pair = Object.entries(pairs ?? {}).find(([, item]) =>
         [offerAsset, askAsset].every(
           (asset) => dex === item.dex && item.assets.includes(asset)
         )
@@ -112,7 +112,7 @@ const useSwapUtils = () => {
         [SwapMode.ROUTESWAP]: getIsRouteswapAvaialble,
       }
 
-      return Object.entries(functions)
+      return Object.entries(functions ?? {})
         .filter(([, fn]) => fn(assets))
         .map(([key]) => key as SwapMode)
     },
