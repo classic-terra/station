@@ -1,8 +1,8 @@
 import BluetoothTransport from "@ledgerhq/hw-transport-web-ble"
 import { LEDGER_TRANSPORT_TIMEOUT } from "config/constants"
-import is from "auth/scripts/is"
-import { useAuth } from "auth"
-import { useConnectedWallet } from "@terra-money/wallet-kit"
+import { useConnectedWallet } from "@terraclassic-community/wallet-kit"
+import useAuth from "../auth/hooks/useAuth"
+import isWallet from "../auth/scripts/isWallet"
 
 export async function isBleAvailable() {
   const n: any = navigator
@@ -17,5 +17,5 @@ export function useIsLedger(): boolean {
   const { wallet } = useAuth()
   const connectedWallet = useConnectedWallet()
 
-  return connectedWallet?.ledger || is.ledger(wallet)
+  return connectedWallet?.ledger || isWallet.ledger(wallet)
 }

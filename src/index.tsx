@@ -8,7 +8,6 @@ import {
   getInitialConfig,
 } from "@terraclassic-community/wallet-kit"
 import "tippy.js/dist/tippy.css"
-import { initSentry } from "utils/sentry/setupSentry"
 
 import "config/lang"
 import { debug } from "utils/env"
@@ -23,6 +22,8 @@ import App from "app/App"
 import InitChains from "app/InitChains"
 import WithNodeInfo from "app/WithNodeInfo"
 import InitQueryClient from "app/InitQueryClient"
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration"
+import { initSentry } from "./utils/analytics/setupSentry"
 
 initSentry()
 

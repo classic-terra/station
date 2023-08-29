@@ -10,12 +10,9 @@ const useAddress = () => {
   const connected = useConnectedWallet()
   const { wallet } = useAuth()
   const chainID = useChainID()
-  if (connected?.addresses && connected?.addresses[chainID]) {
+  if (connected?.addresses[chainID]) {
     return connected?.addresses[chainID]
   }
-
-  if (connected) window.location.reload()
-
   return wallet?.words?.["330"]
     ? addressFromWords(wallet.words["330"])
     : undefined

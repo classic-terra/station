@@ -58,9 +58,9 @@ import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { getShouldTax, useTaxCap, useTaxRate } from "data/queries/treasury"
 import { useNativeDenoms } from "data/token"
 import { getAmount, sortByDenom, sortCoins } from "../utils/coin"
-import isWallet from "../auth/scripts/isWallet"
 import useAuth from "../auth/hooks/useAuth"
 import { useCurrency } from "../data/settings/Currency"
+import isWallet from "../auth/scripts/isWallet"
 
 interface Props<TxValues> {
   /* Only when the token is paid out of the balance held */
@@ -278,7 +278,6 @@ function Tx<TxValues>(props: Props<TxValues>) {
         throw new Error("Fee is not estimated")
 
       const tx = createTx(values)
-
       if (!tx) throw new Error("Tx is not defined")
 
       const gasCoins = new Coins([Coin.fromData(gasFee)])
