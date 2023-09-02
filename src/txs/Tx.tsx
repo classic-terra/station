@@ -339,10 +339,10 @@ function Tx<TxValues>(props: Props<TxValues>) {
     return Object.keys(networks[chain]?.gasPrices ?? {})
   }, [chain, networks])
 
-  useEffect(() => {
-    if (availableGasDenoms.includes(gasDenom)) return
-    setGasDenom(availableGasDenoms[0])
-  }, [availableGasDenoms, gasDenom])
+  // useEffect(() => {
+  //   if (availableGasDenoms.includes(gasDenom)) return
+  //   setGasDenom(availableGasDenoms[0])
+  // }, [availableGasDenoms, gasDenom])
 
   /* element */
   const resetMax = () => setIsMax(false)
@@ -405,7 +405,11 @@ function Tx<TxValues>(props: Props<TxValues>) {
             {t("Fee")}
             {availableGasDenoms.length > 1 && (
               <Select
-                value={gasDenom}
+                value={
+                  availableGasDenoms.includes(gasDenom)
+                    ? gasDenom
+                    : availableGasDenoms[0]
+                }
                 onChange={(e) => setGasDenom(e.target.value)}
                 className={styles.select}
                 small

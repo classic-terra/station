@@ -40,11 +40,7 @@ export const useLCDClient = () => {
   const chainID = useChainID()
 
   const lcdClient = useMemo(
-    () =>
-      new LCDClient({
-        ...network[chainID],
-        URL: "https://lcd.terraclassic.community",
-      }),
+    () => new LCDClient({ ...network[chainID], URL: network[chainID].lcd }),
     [network, chainID]
   )
 
