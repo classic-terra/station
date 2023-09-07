@@ -116,7 +116,10 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
   const { errors } = form.formState
   const { input, ...values } = watch()
   const amount = toAmount(input)
-  const { fields, append, remove } = useFieldArray({ control, name: "changes" })
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "changes",
+  })
   const coinsFieldArray = useFieldArray({ control, name: "coins" })
   const availableAssets =
     chain === "columbus-5" ? ["uluna", "uusd"] : [networks[chain].baseAsset]
@@ -248,6 +251,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                 validate: validate.input(toInput(max)),
               })}
               inputMode="decimal"
+              type="number"
               placeholder={placeholder}
               selectBefore={
                 <Select {...register("spend.denom")} before>
@@ -378,6 +382,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                     valueAsNumber: true,
                   })}
                   inputMode="decimal"
+                  type="number"
                   placeholder={getPlaceholder()}
                   selectBefore={
                     <Select {...register(`coins.${index}.denom`)} before>
@@ -427,7 +432,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
 
             <FormItem label={t("Proposal type")} error={errors.type?.message}>
               <Select {...register("type")}>
-                {Object.values(ProposalType).map((type) => (
+                {Object.values(ProposalType ?? {}).map((type) => (
                   <option value={type} key={type}>
                     {t(type)}
                   </option>
@@ -489,6 +494,7 @@ const SubmitProposalForm = ({ chain }: { chain: string }) => {
                     true
                   ),
                 })}
+                type="number"
                 token={networks[chain].baseAsset}
                 onFocus={max.reset}
                 inputMode="decimal"

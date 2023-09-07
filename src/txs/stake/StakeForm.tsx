@@ -9,6 +9,7 @@ import {
   MsgAllianceUndelegate,
   ValAddress,
 } from "@terraclassic-community/feather.js"
+import { ExternalLink } from "components/general"
 import { Delegation, Validator } from "@terraclassic-community/feather.js"
 import { MsgDelegate, MsgUndelegate } from "@terraclassic-community/feather.js"
 import { MsgBeginRedelegate } from "@terraclassic-community/feather.js"
@@ -38,7 +39,6 @@ interface TxValues {
   source?: ValAddress
   input?: number
 }
-
 export enum StakeAction {
   DELEGATE = "Delegate",
   REDELEGATE = "Redelegate",
@@ -290,6 +290,7 @@ const StakeForm = (props: Props) => {
               })}
               token={denom}
               onFocus={max.reset}
+              type="number"
               inputMode="decimal"
               placeholder={getPlaceholder()}
               autoFocus
@@ -303,20 +304,27 @@ const StakeForm = (props: Props) => {
                 <ul>
                   <li>
                     {feeTokenSymbol} is the fee token used on the{" "}
-                    {networks[chainID].name} blockchain
+                    {networks[chainID].name} blockchain.
                   </li>
                   <li>
-                    To stake {symbol} on {networks[chainID].name}, visit the
-                    Swap page and swap any token for {feeTokenSymbol}
+                    To stake {symbol} on {networks[chainID].name}, visit{" "}
+                    <ExternalLink href="https://tfm.com/ibc">
+                      https://tfm.com/ibc
+                    </ExternalLink>{" "}
+                    and swap any token for {feeTokenSymbol} on{" "}
+                    {networks[chainID].name}. Make sure the {feeTokenSymbol} is
+                    being sent to your {networks[chainID].name} wallet on
+                    Station.
                   </li>
                   <li>
-                    Send {feeTokenSymbol} from Terra to {networks[chainID].name}{" "}
-                    by clicking 'Send' on your wallet sidebar and selecting your{" "}
-                    {networks[chainID].name} address from your address book
+                    Send your {symbol} from Terra to your{" "}
+                    {networks[chainID].name} wallet by clicking 'Send' on your
+                    Station wallet sidebar and selecting your{" "}
+                    {networks[chainID].name} address from your address book.
                   </li>
                   <li>
-                    Return to the Stake page to stake your {symbol} once you
-                    have {feeTokenSymbol} on {networks[chainID].name}
+                    Return to Station's Stake page to stake your {symbol} on{" "}
+                    {networks[chainID].name}.
                   </li>
                 </ul>
               </section>

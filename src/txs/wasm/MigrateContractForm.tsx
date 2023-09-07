@@ -75,6 +75,7 @@ const MigrateContractForm = ({ contract }: { contract: AccAddress }) => {
                 },
               })}
               inputMode="decimal"
+              type="number"
               placeholder="1"
               autoFocus
             />

@@ -63,13 +63,21 @@ const SendPage = () => {
   const balances = useBankBalance()
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
-  const { route } = useWalletRoute() as unknown as { route: { denom?: string } }
+  const { route } = useWalletRoute() as unknown as {
+    route: { denom?: string }
+  }
 
   const availableAssets = useMemo(
     () =>
       Object.values(
         (balances ?? []).reduce((acc, { denom, amount, chain }) => {
           const data = readNativeDenom(denom)
+          // TODO: resolve ibc lun(a|c) balances better at balance fetch
+          // then update max / balance / messaging to translate lun(a|c)
+          // for now, check if token is LUNC and network isn't classic, discard if so
+          // if (data?.symbol === "LUNC" && networkName !== "mainnet")
+          //   return acc as Record<string, AssetType>
+
           if (acc[data.token]) {
             acc[data.token].balance = `${
               parseInt(acc[data.token].balance) + parseInt(amount)
@@ -89,13 +97,17 @@ const SendPage = () => {
               },
             } as Record<string, AssetType>
           }
-        }, {} as Record<string, AssetType>)
+        }, {} as Record<string, AssetType>) ?? {}
       ).sort(
         (a, b) => b.price * parseInt(b.balance) - a.price * parseInt(a.balance)
       ),
     [balances, readNativeDenom, prices]
   )
-  const defaultAsset = route?.denom || availableAssets[0].denom
+
+  const filteredAssets = useMemo(
+    () => availableAssets.filter(({ symbol }) => !symbol.endsWith("...")),
+    [availableAssets]
+  )
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })
@@ -114,6 +126,8 @@ const SendPage = () => {
   const decimals = asset ? readNativeDenom(asset).decimals : 6
 
   const amount = toAmount(input, { decimals })
+
+  const defaultAsset = route?.denom || filteredAssets[0].denom
 
   const availableChains = useMemo(
     () =>
@@ -174,13 +188,13 @@ const SendPage = () => {
 
     if (
       chain === destinationChain ||
-      (getIBCChannel({
+      getIBCChannel({
         from: chain,
         to: destinationChain,
         tokenAddress: token.denom,
-        icsChannel: ibcDenoms[networkName][token.denom]?.icsChannel,
-      }) &&
-        !readNativeDenom(token.denom).isAxelar)
+        icsChannel:
+          ibcDenoms[networkName][`${chain}:${token.denom}`]?.icsChannel,
+      })
     ) {
       return (
         <span className={styles.destination}>
@@ -239,7 +253,8 @@ const SendPage = () => {
           from: chain,
           to: destinationChain,
           tokenAddress: token.denom,
-          icsChannel: ibcDenoms[networkName][token?.denom ?? ""]?.icsChannel,
+          icsChannel:
+            ibcDenoms[networkName][`${chain}:${token.denom}`]?.icsChannel,
         })
         if (!channel) throw new Error("No IBC channel found")
 
@@ -325,7 +340,11 @@ const SendPage = () => {
     createTx,
     disabled: false,
     onChangeMax,
-    onSuccess: () => reset(),
+    onSuccess: () => {
+      reset()
+      setValue("asset", asset)
+      setValue("chain", chain)
+    },
     taxRequired: true,
     queryKeys: [queryKey.bank.balances, queryKey.bank.balance],
     gasAdjustment:
@@ -337,11 +356,6 @@ const SendPage = () => {
       trigger("recipient")
     }
   }, [chain, trigger, recipient])
-
-  const filteredAssets = useMemo(
-    () => availableAssets.filter(({ symbol }) => !symbol.endsWith("...")),
-    [availableAssets]
-  )
 
   const assetsByDenom = filteredAssets.reduce(
     (acc: Record<string, AssetType>, item: AssetType) => {
@@ -372,7 +386,7 @@ const SendPage = () => {
                 error={errors.asset?.message ?? errors.address?.message}
               >
                 <AssetSelector
-                  value={asset ?? ""}
+                  value={asset ?? defaultAsset}
                   onChange={(asset) => setValue("asset", asset)}
                   assetList={filteredAssets}
                   assetsByDenom={assetsByDenom}
@@ -447,6 +461,7 @@ const SendPage = () => {
                     ),
                   })}
                   token={asset}
+                  type="number"
                   inputMode="decimal"
                   onFocus={max.reset}
                   placeholder={getPlaceholder(decimals)}
