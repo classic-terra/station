@@ -50,7 +50,7 @@ const AssetActions = ({ token, symbol, balance }: Props) => {
       {token.startsWith("ibc/") && (
         <ExternalIconLink
           icon={<OpenInNewIcon style={{ fontSize: 18 }} />}
-          href={`https://bridge.terraclassic.community`}
+          href={`https://bridge.terra.money`}
         >
           {t("Bridge")}
         </ExternalIconLink>

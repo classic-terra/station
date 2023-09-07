@@ -14,10 +14,12 @@ import { queryKey, RefetchOptions } from "../query"
 import { useAddress } from "../wallet"
 import { useInterchainLCDClient } from "./lcdClient"
 import { CalcValue } from "./coingecko"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { RewardsListing } from "data/types/rewards-form"
+import { useInterchainAddressesWithFeature } from "auth/hooks/useAddress"
+import { ChainFeature } from "types/chains"
 
 export const useRewards = (chainID?: string) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -29,7 +31,7 @@ export const useRewards = (chainID?: string) => {
         return await lcd.distribution.rewards(addresses[chainID])
       } else {
         const results = await Promise.all(
-          Object.values(addresses).map((address) =>
+          Object.values(addresses ?? {}).map((address) =>
             lcd.distribution.rewards(address as string)
           )
         )
@@ -118,7 +120,7 @@ export const calcRewardsValues = (
   rewards: Rewards,
   currency: Denom,
   calcValue: CalcValue
-) => {
+): RewardsListing => {
   const calc = (coins: Coins) => {
     const list = sortCoins(coins, currency).filter(({ amount }) => has(amount))
     const sum = BigNumber.sum(
@@ -128,20 +130,10 @@ export const calcRewardsValues = (
   }
 
   const total = calc(rewards.total)
-  const byValidator = Object.entries(rewards.rewards)
+  const byValidator = Object.entries(rewards.rewards ?? {})
     .map(([address, coins]) => ({ ...calc(coins), address }))
-    .filter(({ sum }) => has(sum))
+    .filter(({ list }) => has(list.length))
     .sort(({ sum: a }, { sum: b }) => Number(b) - Number(a))
 
   return { total, byValidator }
-}
-
-export const calcRewardsValuesForChain = (
-  rewards: Rewards | undefined,
-  currency: Denom
-) => {
-  if (!rewards) return []
-  return sortCoins(rewards?.total, currency).filter(({ amount }) => {
-    return has(amount)
-  })
 }

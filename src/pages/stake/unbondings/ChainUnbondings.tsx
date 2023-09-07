@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { UnbondingDelegation } from "@terraclassic-community/feather.js"
 import { AccAddress, Dec } from "@terraclassic-community/feather.js"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
 import { useNativeDenoms } from "data/token"
 import { useExchangeRates } from "data/queries/coingecko"
 import { combineState } from "data/query"
@@ -15,10 +15,11 @@ import { Read } from "components/token"
 import { DateTimeRenderer, TooltipIcon } from "components/display"
 import StakedCard from "../components/StakedCard"
 import styles from "../CardModal.module.scss"
+import { ChainFeature } from "types/chains"
 
 const ChainUnbondings = ({ chain }: { chain: string }) => {
   const { t } = useTranslation()
-  const networks = useNetwork()
+  const networks = useNetworkWithFeature(ChainFeature.STAKING)
   const readNativeDenom = useNativeDenoms()
   const { data: prices, ...pricesState } = useExchangeRates()
   const { data, ...unbondingsState } = useUnbondings(chain)
@@ -58,12 +59,11 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
           amount: newAmountHolder + balance / 10 ** decimals,
         }
       },
-      { price: -1, amount: -1 }
+      { price: 0, amount: 0 }
     )
 
     const list = flattenUnbondings(chainUnbondings)
     const totalToDisplay = chainTotalPriceAndAmount?.price
-    const showTokens = chainTotalPriceAndAmount?.amount !== -1
 
     return (
       <ModalButton
@@ -81,7 +81,7 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
                 >
                   {title}
                 </TooltipIcon>
-                {totalToDisplay !== -1 && (
+                {list?.length > 0 && (
                   <span className={styles.view_more}>View More</span>
                 )}
               </div>
@@ -91,7 +91,6 @@ const ChainUnbondings = ({ chain }: { chain: string }) => {
             denom={chainDenom}
             onClick={open}
             cardName={"undelegations"}
-            showTokens={showTokens}
           />
         )}
       >

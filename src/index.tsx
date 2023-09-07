@@ -3,14 +3,13 @@ import { render } from "react-dom"
 import { BrowserRouter } from "react-router-dom"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
-import { getChainOptions } from "@terraclassic-community/wallet-controller"
-import { WalletProvider } from "@terraclassic-community/wallet-provider"
+import {
+  WalletProvider,
+  getInitialConfig,
+} from "@terraclassic-community/wallet-kit"
 import "tippy.js/dist/tippy.css"
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration"
-import { initSentry } from "utils/sentry/setupSentry"
 
 import "config/lang"
-import { BRIDGE } from "config/constants"
 import { debug } from "utils/env"
 
 import "index.scss"
@@ -23,17 +22,18 @@ import App from "app/App"
 import InitChains from "app/InitChains"
 import WithNodeInfo from "app/WithNodeInfo"
 import InitQueryClient from "app/InitQueryClient"
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration"
+import { initSentry } from "./utils/analytics/setupSentry"
 
-const connectorOpts = { bridge: BRIDGE }
 initSentry()
 
-getChainOptions().then((chainOptions) =>
+getInitialConfig().then((defaultNetworks) =>
   render(
     <StrictMode>
       <RecoilRoot>
         <BrowserRouter>
           <ScrollToTop />
-          <WalletProvider {...chainOptions} connectorOpts={connectorOpts}>
+          <WalletProvider defaultNetworks={defaultNetworks}>
             <InitQueryClient>
               <InitNetworks>
                 <WithNodeInfo>

@@ -1,44 +1,47 @@
-import { useQuery, useQueries } from "react-query"
+import { useQueries, useQuery } from "react-query"
 import { flatten, path, uniqBy } from "ramda"
 import BigNumber from "bignumber.js"
 import {
   AccAddress,
   Coin,
+  Coins,
+  Delegation,
   MsgAllianceDelegate,
   MsgAllianceUndelegate,
   MsgDelegate,
+  MsgExecuteContract,
   MsgUndelegate,
-  StakingParams,
+  UnbondingDelegation,
   ValAddress,
   Validator,
 } from "@terraclassic-community/feather.js"
-import {
-  Delegation,
-  UnbondingDelegation,
-} from "@terraclassic-community/feather.js"
 import { has } from "utils/num"
 import { StakeAction } from "txs/stake/StakeForm"
-import { queryKey, Pagination, RefetchOptions, combineState } from "../query"
+import { combineState, Pagination, queryKey, RefetchOptions } from "../query"
 import { useInterchainLCDClient } from "./lcdClient"
-import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { useInterchainAddressesWithFeature } from "auth/hooks/useAddress"
 import { toAmount } from "@terra-money/terra-utils"
 import { useExchangeRates } from "data/queries/coingecko"
 import { useNativeDenoms } from "data/token"
 import shuffle from "utils/shuffle"
 import { getIsBonded } from "pages/stake/ValidatorsList"
-import { useNetwork } from "data/wallet"
+import { useNetworkWithFeature } from "data/wallet"
+import { ChainFeature } from "types/chains"
+
 import { AllianceDelegationResponse } from "@terraclassic-community/feather.js/dist/client/lcd/api/AllianceAPI"
 import {
   AllianceDelegation,
   useInterchainAllianceDelegations,
 } from "./alliance"
+import { useAllianceHub } from "./alliance-protocol"
+import { getAllianceDelegations } from "data/parsers/alliance-protocol"
 
 export const useInterchainValidators = () => {
-  const addresses = useInterchainAddresses() || {}
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainID) => {
+    Object.keys(addresses ?? {}).map((chainID) => {
       return {
         queryKey: [queryKey.interchain.staking.validators, addresses, chainID],
         queryFn: async () => {
@@ -90,11 +93,11 @@ export const useValidators = (chainID: string) => {
 }
 
 export const useInterchainDelegations = () => {
-  const addresses = useInterchainAddresses() || {}
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainID) => {
+    Object.keys(addresses ?? {}).map((chainID) => {
       return {
         queryKey: [queryKey.interchain.staking.delegations, addresses, chainID],
         queryFn: async () => {
@@ -137,7 +140,7 @@ export const useStakingParams = (chainID: string) => {
 
 export const useAllStakingParams = () => {
   const lcd = useInterchainLCDClient()
-  const network = useNetwork()
+  const network = useNetworkWithFeature(ChainFeature.STAKING)
 
   return useQueries(
     Object.values(network ?? {}).map(({ chainID }) => {
@@ -153,11 +156,13 @@ export const useAllStakingParams = () => {
   )
 }
 
-export const getChainUnbondTime = (stakingParams: StakingParams) =>
-  stakingParams?.unbonding_time / (60 * 60 * 24)
+export const getChainUnbondTime = (unbondTime: number | undefined) => {
+  if (!unbondTime) return 0
+  return +(unbondTime / (60 * 60 * 24)).toFixed(2)
+}
 
 export const useDelegations = (chainID: string, disabled?: boolean) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -179,7 +184,7 @@ export const useDelegations = (chainID: string, disabled?: boolean) => {
 }
 
 export const useDelegation = (validatorAddress: ValAddress) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -187,7 +192,7 @@ export const useDelegation = (validatorAddress: ValAddress) => {
     async () => {
       if (!addresses) return
       const prefix = ValAddress.getPrefix(validatorAddress)
-      const address = Object.values(addresses).find(
+      const address = Object.values(addresses ?? {}).find(
         (a) => AccAddress.getPrefix(a as string) === prefix
       )
       if (!address) return
@@ -206,11 +211,11 @@ export const useDelegation = (validatorAddress: ValAddress) => {
 }
 
 export const useInterchainUnbondings = () => {
-  const addresses = useInterchainAddresses() || {}
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQueries(
-    Object.keys(addresses).map((chainID) => {
+    Object.keys(addresses ?? {}).map((chainID) => {
       return {
         queryKey: [queryKey.interchain.staking.unbondings, addresses, chainID],
         queryFn: async () => {
@@ -225,7 +230,7 @@ export const useInterchainUnbondings = () => {
 }
 
 export const useUnbondings = (chainID: string) => {
-  const addresses = useInterchainAddresses()
+  const addresses = useInterchainAddressesWithFeature(ChainFeature.STAKING)
   const lcd = useInterchainLCDClient()
 
   return useQuery(
@@ -291,9 +296,9 @@ export const getAvailableStakeActions = (
 
 /* delegation */
 export const calcDelegationsTotal = (
-  delegations: Delegation[] | AllianceDelegationResponse[]
+  delegations?: Delegation[] | AllianceDelegationResponse[]
 ) => {
-  return delegations.length
+  return delegations?.length
     ? BigNumber.sum(
         ...delegations.map(({ balance }) => balance.amount.toString())
       ).toString()
@@ -303,6 +308,14 @@ export const calcDelegationsTotal = (
 export const useStakeChartData = (chain?: string) => {
   const { data: prices } = useExchangeRates()
   const readNativeDenom = useNativeDenoms()
+  const allianceHub = useAllianceHub()
+
+  const hubDelegations = allianceHub.useDelegations()
+
+  const filteredHubDelegations =
+    chain === undefined
+      ? hubDelegations.data
+      : hubDelegations.data?.filter((data) => data?.chainID === chain)
 
   const delegationsData = useInterchainDelegations()
   const delegations: Delegation[] = delegationsData
@@ -312,13 +325,17 @@ export const useStakeChartData = (chain?: string) => {
       [] as Delegation[]
     )
   const allianceDelegationsData = useInterchainAllianceDelegations()
-  const allianceDelegations = allianceDelegationsData
+  let allianceDelegations = allianceDelegationsData
+    .concat()
     .filter(({ data }) => !chain || chain === data?.chainID)
     .reduce(
       (acc, { data }) =>
         data?.delegations ? [...data.delegations, ...acc] : acc,
       [] as AllianceDelegation[]
     )
+  allianceDelegations = allianceDelegations.concat(
+    getAllianceDelegations(filteredHubDelegations)
+  )
 
   const delAmounts: Record<string, number> = delegations.reduce(
     (acc, { balance }) => {
@@ -344,9 +361,13 @@ export const useStakeChartData = (chain?: string) => {
   }, delAmounts)
 
   return {
-    ...combineState(...delegationsData, ...allianceDelegationsData),
+    ...combineState(
+      ...delegationsData,
+      ...allianceDelegationsData,
+      hubDelegations
+    ),
 
-    data: Object.entries(totalAmounts).map(([token, amount]) => {
+    data: Object.entries(totalAmounts ?? {}).map(([token, amount]) => {
       const { decimals, symbol, icon } = readNativeDenom(token)
 
       return {
@@ -400,12 +421,27 @@ export const getQuickStakeMsgs = (
   coin: Coin,
   elgibleVals: ValAddress[],
   decimals: number,
-  isAlliance: boolean
+  isAlliance: boolean,
+  hubAddress: string,
+  stakeOnAllianceHub?: boolean
 ) => {
   const { denom, amount } = coin.toData()
   const totalAmt = new BigNumber(amount)
   const isLessThanAmt = (amt: number) =>
     totalAmt.isLessThan(toAmount(amt, { decimals }))
+
+  if (isAlliance && stakeOnAllianceHub) {
+    return [
+      new MsgExecuteContract(
+        address,
+        hubAddress,
+        {
+          stake: {},
+        },
+        new Coins([coin])
+      ),
+    ]
+  }
 
   const numOfValDests = isLessThanAmt(100)
     ? 1
@@ -450,13 +486,28 @@ export const getQuickUnstakeMsgs = (
     | {
         isAlliance: true
         delegations: AllianceDelegationResponse[]
-      }
+      },
+  hubAddress: string,
+  stakeOnAllianceHub?: boolean
 ) => {
   const { isAlliance, delegations } = details
   const { denom, amount } = coin.toData()
   const bnAmt = new BigNumber(amount)
   const msgs = []
   let remaining = bnAmt
+
+  if (isAlliance && stakeOnAllianceHub) {
+    return [
+      new MsgExecuteContract(address, hubAddress, {
+        unstake: {
+          info: {
+            native: coin.denom,
+          },
+          amount: amount,
+        },
+      }),
+    ]
+  }
 
   if (isAlliance) {
     for (const d of delegations) {

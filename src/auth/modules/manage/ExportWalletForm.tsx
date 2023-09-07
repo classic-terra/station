@@ -79,7 +79,7 @@ const ExportWalletForm = () => {
 
       <Form onSubmit={handleSubmit(submit)}>
         <section>
-          {Object.values(Mode).map((key) => {
+          {Object.values(Mode ?? {}).map((key) => {
             const checked = mode === key
 
             return (
