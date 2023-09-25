@@ -4,8 +4,8 @@ import { BrowserRouter } from "react-router-dom"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { RecoilRoot } from "recoil"
 import {
-  WalletProvider,
   getInitialConfig,
+  WalletProvider,
 } from "@terraclassic-community/wallet-kit"
 import "tippy.js/dist/tippy.css"
 
@@ -23,9 +23,9 @@ import InitChains from "app/InitChains"
 import WithNodeInfo from "app/WithNodeInfo"
 import InitQueryClient from "app/InitQueryClient"
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration"
-import { initSentry } from "./utils/analytics/setupSentry"
+import { initAnalytics } from "./utils/analytics"
 
-initSentry()
+initAnalytics()
 
 getInitialConfig().then((defaultNetworks) =>
   render(
