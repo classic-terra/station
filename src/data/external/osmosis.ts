@@ -39,11 +39,13 @@ export const useGammTokens = () => {
     [queryKey.gammTokens],
     async () => {
       try {
-        const { data } = await request.get<IOsmosisPoolResponse>(
-          "/pools/v2/all?low_liquidity=true",
-          { baseURL: OSMOSIS_API_URL }
-        )
-        return data
+        const { data } = await request.get("/pools/v2/all?low_liquidity=true", {
+          baseURL: OSMOSIS_API_URL,
+        })
+
+        if (data?.status_code === "500") return
+
+        return data as IOsmosisPoolResponse
       } catch (error) {
         console.error(error)
         return
@@ -59,12 +61,10 @@ export const useGammTokens = () => {
   const gammTokens = new Map<string, string>()
 
   if (fetch.data) {
-    for (const [poolId = "", poolAsset = []] of Object.entries(
-      fetch.data ?? {}
-    )) {
+    for (const [poolId, poolAsset] of Object.entries(fetch.data ?? {})) {
       gammTokens.set(
         "gamm/pool/" + poolId,
-        poolAsset?.map((asset) => asset.symbol).join("-") + " LP"
+        poolAsset.map((asset) => asset.symbol).join("-") + " LP"
       )
     }
   }
