@@ -18,7 +18,6 @@ export const useActiveDenoms = () => {
     async () => {
       const activeDenoms = await lcd.oracle.activeDenoms()
       return sortDenoms(["uluna", ...activeDenoms])
-      // return ['uluna', 'uusd', 'uaud', 'ucad', 'uchf', 'ucny', 'udkk', 'ueur', 'ugbp', 'uhkd', 'uidr', 'uinr', 'ujpy', 'ukrw', 'umnt', 'umyr', 'unok', 'uphp', 'usdr', 'usek', 'usgd', 'uthb', 'utwd']
     },
     { ...RefetchOptions.INFINITY }
   )
@@ -61,13 +60,13 @@ const STAKED_TOKENS: Record<string, string> = {
 export const useExchangeRates = () => {
   const currency = useCurrency()
   const network = useNetworkName()
+
   const { data: oraclePrices } = useMemoizedPrices("uusd")
+  const { uluna: ulunaPrice } = oraclePrices || {}
 
   return useQuery(
     [queryKey.coingecko.exchangeRates, currency, network],
     async () => {
-      const { uluna: uluna_price } = oraclePrices || {}
-
       const [{ data: TFM_IDs }, { data: prices }, ulunaPrices, fiatPrice] =
         await Promise.all([
           axios.get<Record<string, string>>("station/tfm.json", {
@@ -78,12 +77,12 @@ export const useExchangeRates = () => {
           ),
           {
             uluna: {
-              usd: uluna_price,
-              change24h: uluna_price,
+              usd: ulunaPrice,
+              change24h: ulunaPrice,
             },
             uluna_classic: {
-              usd: uluna_price,
-              change24h: uluna_price,
+              usd: ulunaPrice,
+              change24h: ulunaPrice,
             },
           },
           (async () => {
@@ -142,7 +141,7 @@ export const useExchangeRates = () => {
 
       return priceObject
     },
-    { ...RefetchOptions.DEFAULT }
+    { ...RefetchOptions.DEFAULT, enabled: !!ulunaPrice }
   )
 }
 
