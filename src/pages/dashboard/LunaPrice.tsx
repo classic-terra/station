@@ -1,50 +1,30 @@
 import { useTranslation } from "react-i18next"
 import { useCurrency } from "data/settings/Currency"
 import { useExchangeRates } from "data/queries/coingecko"
-import { useMemoizedPrices } from "data/queries/oracle"
 import { Card } from "components/layout"
 import { Read } from "components/token"
 import { ModalButton } from "components/feedback"
 import LunaPriceChart from "../charts/LunaPriceChart"
 import DashboardContent from "./components/DashboardContent"
 import styles from "./Dashboard.module.scss"
-import { useChainID, useNetworkName } from "../../auth/hooks/useNetwork"
 
 const LunaPrice = () => {
   const { t } = useTranslation()
   const currency = useCurrency()
   const denom = currency.id === "uluna" ? "uusd" : currency.id
   const { data: prices, ...state } = useExchangeRates()
-  const { data: oraclePrices } = useMemoizedPrices("uusd")
-  const networkName = useNetworkName()
-  const chainID = useChainID()
 
   const render = () => {
-    if (networkName === "mainnet" && chainID === "columbus-5") {
-      if (!oraclePrices) return
-      const { uluna: price } = oraclePrices
-      return (
-        <DashboardContent
-          value={<Read amount={String(price * 1e6)} denom={denom} auto />}
-          footer={
-            <ModalButton
-              title={t("Lunc price")}
-              renderButton={(open) => (
-                <button onClick={open}>{t("Show chart")}</button>
-              )}
-            >
-              <LunaPriceChart />
-            </ModalButton>
-          }
-        />
-      )
-    }
-
     if (!prices) return
-    const { uluna: price } = prices
     return (
       <DashboardContent
-        value={<Read amount={String(price.price * 1e6)} denom={denom} auto />}
+        value={
+          <Read
+            amount={String(prices?.["uluna:classic"]?.price * 1e6)}
+            denom={denom}
+            auto
+          />
+        }
         footer={
           <ModalButton
             title={t("Lunc price")}

@@ -43,7 +43,7 @@ export const useGammTokens = () => {
           baseURL: OSMOSIS_API_URL,
         })
 
-        if (data?.status_code === "500") return
+        if (data?.status_code) return
 
         return data as IOsmosisPoolResponse
       } catch (error) {
